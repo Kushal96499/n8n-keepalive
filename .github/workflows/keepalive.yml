@@ -2,13 +2,14 @@ name: Keep n8n Alive
 
 on:
   schedule:
-    - cron: "*/25 * * * *"  # every 25 minutes
+    - cron: "*/25 * * * *"  # runs every 25 minutes
   workflow_dispatch:
 
 jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping n8n
+      - name: Ping n8n URL
         run: |
-          curl -L ${{ secrets.N8N_URL }}
+          echo "Pinging n8n at ${{ secrets.N8N_URL }}"
+          curl -L --silent --show-error ${{ secrets.N8N_URL }}
