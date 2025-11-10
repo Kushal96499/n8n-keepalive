@@ -2,14 +2,30 @@ name: Keep n8n Alive
 
 on:
   schedule:
-    - cron: "*/25 * * * *"  # runs every 25 minutes
-  workflow_dispatch:
+    - cron: "*/25 * * * *"     # Runs every 25 minutes
+  workflow_dispatch:            # Manual trigger
 
 jobs:
   keepalive:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Ping https://n8n-latest-s5ed.onrender.com
+      - name: Ping n8n Instance
+        env:
+          N8N_URL: ${{ secrets.N8N_URL }}
         run: |
-          echo "Pinging n8n at ${{ secrets.https://n8n-latest-s5ed.onrender.com }}"
-          curl -L --silent --show-error ${{ secrets.https://n8n-latest-s5ed.onrender.com }}
+          if [ -z "$N8N_URL" ]; then
+            echo "Error: N8N_URL secret is missing."
+            exit 1
+          fi
+
+          echo "Pinging n8n at $N8N_URL"
+          STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$N8N_URL")
+
+          echo "Response Code: $STATUS"
+
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+            echo "n8n is awake."
+          else
+            echo "Warning: n8n may be asleep or unreachable."
+          fi
