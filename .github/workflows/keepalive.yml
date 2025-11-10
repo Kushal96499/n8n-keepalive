@@ -9,7 +9,7 @@ jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping n8n URL
+      - name: Ping https://n8n-latest-s5ed.onrender.com
         run: |
-          echo "Pinging n8n at ${{ secrets.N8N_URL }}"
-          curl -L --silent --show-error ${{ secrets.N8N_URL }}
+          echo "Pinging n8n at ${{ secrets.https://n8n-latest-s5ed.onrender.com }}"
+          curl -L --silent --show-error ${{ secrets.https://n8n-latest-s5ed.onrender.com }}
